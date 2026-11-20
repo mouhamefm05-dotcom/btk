@@ -56,6 +56,8 @@ h2{margin:8px 0 14px}
 .acts{display:flex;flex-wrap:wrap;gap:10px}
 footer{text-align:center;color:var(--mut);padding:28px 16px;font-size:.9rem}
 .hide{display:none}
+a.chip{text-decoration:none;display:inline-block}
+.wa{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:8;background:var(--g);color:#fff;text-decoration:none;font-weight:700;padding:12px 16px;border-radius:99px;box-shadow:0 4px 14px #0004}
 @media(max-width:520px){.pay{grid-template-columns:1fr}.search{max-width:none;flex:1 1 100%}nav a{padding:8px}}
 </style></head><body>
 <header>
@@ -72,6 +74,7 @@ footer{text-align:center;color:var(--mut);padding:28px 16px;font-size:.9rem}
 <div class="tools"><div class="chips" id="chips"></div><input class="search" id="q" type="search" placeholder="Rechercher un article" aria-label="Rechercher"></div>
 <div class="grid" id="grid"></div>
 </section>
+<section id="v-cat" class="hide"><div class="chips" id="chips2" style="margin-bottom:12px"></div><h2 id="ct"></h2><div class="grid" id="cgrid"></div></section>
 <section id="v-panier" class="hide">
 <h2>Mon panier</h2><div id="cart"></div>
 </section>
@@ -80,12 +83,13 @@ footer{text-align:center;color:var(--mut);padding:28px 16px;font-size:.9rem}
 </section>
 </main>
 <footer>© Ma Boutique · Dakar, Sénégal · Paiement à la validation avec le vendeur</footer>
+<a class="wa" href="#" onclick="wa();return false">WhatsApp</a>
 <div class="modal" id="modal" onclick="if(event.target===this)closeM()"><div class="box" id="box" role="dialog" aria-modal="true"></div></div>
 <script>
 /* ===== À PERSONNALISER ===== */
-const SHOP={nom:"Ma Boutique",whatsapp:"221770000000",tel:"+221770000000",wave:"77 000 00 00",om:"77 000 00 00",qrWave:"",qrOM:""};
+const SHOP={nom:"Ma Boutique",whatsapp:"221767645076",tel:"+221767645076",wave:"+221 77 448 45 13",om:"+221 77 448 45 13",waveLink:"",omLink:"",qrWave:"",qrOM:""};
 /* qrWave / qrOM : collez ici l’image de votre QR code (lien ou data:image). img : photo de chaque article. */
-const P=[
+const OLD=[
 {id:1,n:"T-shirt coton",p:5000,c:"Vêtements",e:"👕",bg:"#f6d8c4",d:"T-shirt 100 % coton, coupe droite, tailles S à XL. Doux et résistant au lavage."},
 {id:2,n:"Robe wax",p:15000,c:"Vêtements",e:"👗",bg:"#f2c0cf",d:"Robe en tissu wax, motifs colorés, coupe ajustée. Fabrication locale."},
 {id:3,n:"Boubou brodé",p:25000,c:"Vêtements",e:"🥻",bg:"#c9d8f0",d:"Boubou traditionnel brodé à la main, idéal pour les fêtes et cérémonies."},
@@ -107,7 +111,16 @@ const P=[
 {id:19,n:"Sandales cuir",p:9500,c:"Chaussures",e:"🩴",bg:"#e5cfae",d:"Sandales en cuir, semelle confortable. Pointures 36 à 45."},
 {id:20,n:"Baskets",p:17000,c:"Chaussures",e:"👟",bg:"#cfe0ee",d:"Baskets légères et respirantes, idéales pour la marche et le sport."}
 ];
-const CATS=["Tous",...new Set(P.map(x=>x.c))];
+const COL=[["noir","#d3d3d8"],["bleu","#bcd0ea"],["rouge","#f2c0c0"],["vert","#cfe3cc"]];
+const B={"Vêtements":[["T-shirt coton",5000,"👕","T-shirt 100 % coton, tailles S à XL."],["Robe wax",15000,"👗","Robe en tissu wax, coupe ajustée."],["Boubou brodé",25000,"🥻","Boubou brodé pour les fêtes."],["Chemise lin",9000,"👔","Chemise légère, parfaite pour la chaleur."],["Veste légère",14000,"🧥","Veste fine pour les soirées fraîches."]],"Pantalons":[["Jean slim",12000,"👖","Jean stretch coupe slim, tailles 36 à 46."],["Pantalon chino",10000,"👖","Chino en coton, élégant et décontracté."],["Jogging sport",8000,"🏃","Jogging molletonné avec poches zippées."],["Pantalon tissu",11000,"👖","Pantalon de ville coupe droite."],["Short été",6000,"🩳","Short léger en coton."]],"Sacs":[["Sac à main cuir",18000,"👜","Cuir véritable, deux compartiments."],["Sac à dos",14000,"🎒","Résistant à l’eau, poche ordinateur 15 pouces."],["Pochette soirée",6000,"👛","Petite pochette élégante avec chaînette."],["Sac de voyage",20000,"🧳","Grande capacité, anses renforcées."],["Cabas",7000,"🛍️","Cabas solide pour le marché et la plage."]],"Accessoires":[["Montre classique",20000,"⌚","Bracelet acier, résistante aux éclaboussures."],["Lunettes de soleil",4500,"🕶️","Protection UV400, monture légère."],["Bracelet perles",3000,"📿","Bracelet artisanal fait main."],["Casquette",3500,"🧢","Casquette ajustable en coton."],["Ceinture cuir",5000,"🎗️","Ceinture en cuir, boucle métal."]],"Maison":[["Parure de lit",22000,"🛏️","Drap, housse et 2 taies, tissu doux."],["Set de cuisine",16000,"🍳","5 ustensiles antiadhésifs."],["Lampe déco",7500,"💡","Lampe de chevet, lumière chaude."],["Tapis salon",28000,"🧶","Tapis doux 160×230 cm, antidérapant."],["Rideaux",12000,"🪟","Rideaux occultants, lavables."]],"Chaussures":[["Sandales cuir",9500,"🩴","Semelle confortable, pointures 36 à 45."],["Baskets",17000,"👟","Légères et respirantes."],["Mocassins",15000,"👞","Mocassins en cuir souple."],["Escarpins",13000,"👠","Talon confortable pour les sorties."],["Chaussons",4000,"🥿","Chaussons doux pour la maison."]]};
+const P=[];let _i=0;
+const CATS=Object.entries(B).map(([n,bs])=>{const s=n.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const l=[];bs.forEach(b=>COL.forEach((c,k)=>{const x={id:++_i,n:b[0]+" "+c[0],p:b[1]+k*500,c:n,e:b[2],bg:c[1],d:b[3]+" Coloris "+c[0]+"."};l.push(x);P.push(x)}));return{n,s,l}});
+function cards(l){return l.map(x=>`<div class="card"><div onclick="openM(${x.id})" style="cursor:pointer">${pic(x)}<div class="price">${F(x.p)}</div><div class="name">${x.n}</div><div class="cat">${x.c}</div></div><button class="add" onclick="add(${x.id})">Ajouter au panier</button></div>`).join("")}
+function chips(){const h=(location.hash||"#accueil").slice(1);const t=[{n:"Tous",s:"accueil"},...CATS].map(c=>`<a class="chip ${c.s===h?"on":""}" href="#${c.s}">${c.n}</a>`).join("");$("chips").innerHTML=t;$("chips2").innerHTML=t}
+function FEAT(){const o=[];for(let i=0;i<5;i++)CATS.forEach(c=>o.push(c.l[i*4]));return o.slice(0,20)}
+function grid(){const l=term?P.filter(x=>x.n.toLowerCase().includes(term)).slice(0,40):FEAT();$("grid").innerHTML=l.length?cards(l):`<div class="empty">Aucun article trouvé.</div>`}
+function route(){const h=(location.hash||"#accueil").slice(1),c=CATS.find(x=>x.s===h);const v=c?"cat":["accueil","panier","commande"].includes(h)?h:"accueil";["accueil","cat","panier","commande"].forEach(k=>$("v-"+k).classList.toggle("hide",k!==v));$("n-accueil").classList.toggle("on",v==="accueil"||v==="cat");$("n-panier").classList.toggle("on",v==="panier"||v==="commande");if(c){$("ct").textContent=c.n+" · "+c.l.length+" articles";$("cgrid").innerHTML=cards(c.l)}if(v==="panier")renderCart();if(v==="commande")renderCheckout();chips();window.scrollTo(0,0)}
+function payNow(m){window.pm=m;const n=m==="Wave"?SHOP.wave:SHOP.om,l=m==="Wave"?SHOP.waveLink:SHOP.omLink;try{navigator.clipboard.writeText(n.replace(/\s/g,""))}catch(e){}$("payinfo").innerHTML=`Envoyez <b>${F(total())}</b> au <b>${n}</b> via ${m} (numéro copié), puis touchez « Commander sur WhatsApp » pour confirmer.`;if(l)window.open(l,"_blank")}
 let cat="Tous",term="",cart={};
 try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 const $=id=>document.getElementById(id);
@@ -116,9 +129,9 @@ const save=()=>{try{localStorage.setItem("cart",JSON.stringify(cart))}catch(e){}
 const pic=x=>`<div class="ph" style="background:${x.bg}">${x.img?`<img src="${x.img}" alt="${x.n}">`:x.e}</div>`;
 function count(){return Object.values(cart).reduce((a,b)=>a+b,0)}
 function total(){return Object.entries(cart).reduce((s,[id,q])=>s+q*P.find(x=>x.id==id).p,0)}
-function chips(){$("chips").innerHTML=CATS.map(c=>`<button class="chip ${c===cat?"on":""}" onclick="setCat('${c}')">${c}</button>`).join("")}
-function setCat(c){cat=c;chips();grid()}
-function grid(){
+function chipsOld(){$("chips").innerHTML=CATS.map(c=>`<button class="chip ${c===cat?"on":""}" onclick="setCat('${c}')">${c}</button>`).join("")}
+function setCatOld(c){cat=c;chips();grid()}
+function gridOld(){
 const l=P.filter(x=>(cat==="Tous"||x.c===cat)&&x.n.toLowerCase().includes(term));
 $("grid").innerHTML=l.length?l.map(x=>`<div class="card"><div onclick="openM(${x.id})" style="cursor:pointer">${pic(x)}<div class="price">${F(x.p)}</div><div class="name">${x.n}</div><div class="cat">${x.c}</div></div><button class="add" onclick="add(${x.id})">Ajouter au panier</button></div>`).join(""):`<div class="empty">Aucun article trouvé.</div>`}
 function add(id,n=1){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];save();upd();if(location.hash==="#panier")renderCart()}
@@ -141,12 +154,12 @@ function renderCheckout(){
 if(!count()){$("checkout").innerHTML=`<div class="empty">Ajoutez d’abord des articles.<br><br><a class="btn" href="#accueil">Voir la boutique</a></div>`;return}
 $("checkout").innerHTML=`<div class="total" style="text-align:left">${count()} article(s) · ${F(total())}</div>
 <div class="form"><input id="nm" placeholder="Votre nom" aria-label="Nom"><textarea id="ad" rows="2" placeholder="Adresse de livraison" aria-label="Adresse"></textarea></div>
-<h3>1. Choisissez le paiement</h3>
+<h3>1. Payez en un clic</h3><div class="acts"><button class="btn" style="background:#1dc8f2" onclick="payNow('Wave')">Payer avec Wave</button><button class="btn" style="background:#ff7900;color:#fff" onclick="payNow('Orange Money')">Payer avec Orange Money</button></div><p id="payinfo" style="font-weight:600"></p>
 <div class="pay">${qrBox("Wave",SHOP.wave,SHOP.qrWave)}${qrBox("Orange Money",SHOP.om,SHOP.qrOM)}</div>
 <p style="color:var(--mut)">Scannez le QR code ou envoyez le montant au numéro indiqué, puis confirmez avec le vendeur.</p>
 <h3>2. Contactez le vendeur</h3>
 <div class="acts"><button class="btn g" onclick="wa()">Commander sur WhatsApp</button><a class="btn" href="tel:${SHOP.tel}">Appeler le vendeur</a><a class="btn o" href="#panier">Retour au panier</a></div>`}
-function route(){
+function routeOld(){
 const h=(location.hash||"#accueil").slice(1);const v=["accueil","panier","commande"].includes(h)?h:"accueil";
 ["accueil","panier","commande"].forEach(k=>$("v-"+k).classList.toggle("hide",k!==v));
 $("n-accueil").classList.toggle("on",v==="accueil");$("n-panier").classList.toggle("on",v!=="accueil");
