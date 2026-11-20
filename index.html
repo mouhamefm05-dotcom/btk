@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ma Boutique – Dakar</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf6ef;--card:#fff;--ink:#1b2a49;--mut:#5d6779;--acc:#f2b632;--accink:#1b2a49;--line:#e4dccb;--g:#1f8a5b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101828;--card:#182339;--ink:#f3eee2;--mut:#a5afc2;--line:#2b3955;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101828;--card:#182339;--ink:#f3eee2;--mut:#a5afc2;--line:#2b3955;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 'Bricolage Grotesque',system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:12px 16px}
+.logo{font-weight:800;font-size:1.3rem;margin-right:auto;color:var(--ink);text-decoration:none}
+nav a{color:var(--ink);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600}
+nav a.on{background:var(--acc);color:var(--accink)}
+.badge{background:var(--g);color:#fff;border-radius:99px;padding:0 7px;font-size:.8rem;margin-left:4px}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.hero{background:var(--ink);color:#faf6ef;border-radius:20px;padding:32px 24px;margin-bottom:20px;background-image:repeating-linear-gradient(45deg,#ffffff0a 0 14px,transparent 14px 28px)}
+.hero h1{font-size:clamp(1.8rem,6vw,3rem);line-height:1.1;margin:0 0 10px;font-weight:800}
+.hero p{max-width:52ch;margin:0 0 18px;opacity:.9}
+.btn{background:var(--acc);color:var(--accink);font-weight:700;padding:12px 18px;display:inline-block;text-decoration:none}
+.btn.g{background:var(--g);color:#fff}.btn.o{background:transparent;border:2px solid var(--ink);color:var(--ink)}
+.perks{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.perks span{background:#ffffff1f;padding:4px 12px;border-radius:99px;font-size:.88rem}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+.chips{display:flex;gap:8px;overflow-x:auto;flex:1;padding-bottom:4px}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:8px 14px;white-space:nowrap;border-radius:99px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+input,textarea{font:inherit;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.search{max-width:220px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-align:left;padding:0;color:var(--ink);display:flex;flex-direction:column}
+.ph{aspect-ratio:1;display:grid;place-items:center;font-size:3.6rem;position:relative}
+.ph img{width:100%;height:100%;object-fit:cover}
+.price{font-weight:800;padding:10px 12px 0;color:var(--g);font-size:1.05rem}
+.name{padding:0 12px 4px;font-weight:600}.cat{padding:0 12px 12px;color:var(--mut);font-size:.85rem}
+.add{margin:0 12px 12px;background:var(--acc);color:var(--accink);padding:8px;font-weight:700}
+h2{margin:8px 0 14px}
+.row{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px}
+.row .ph{width:64px;font-size:2rem;border-radius:10px;flex:none}.row .info{flex:1;min-width:0}
+.qty{display:flex;align-items:center;gap:8px}.qty button{width:32px;height:32px;background:var(--line);color:var(--ink)}
+.total{font-size:1.4rem;font-weight:800;text-align:right;margin:14px 0}
+.empty{text-align:center;padding:40px 10px;color:var(--mut)}
+.modal{position:fixed;inset:0;background:#000a;z-index:20;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.box{background:var(--card);border-radius:18px;max-width:440px;width:100%;max-height:90vh;overflow:auto}
+.box .ph{aspect-ratio:16/10;font-size:5rem}.box .b{padding:16px}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qr{border:2px dashed var(--line);border-radius:14px;padding:12px;text-align:center}
+.qr .q{aspect-ratio:1;display:grid;place-items:center;color:var(--mut);font-size:.9rem;background:var(--bg);border-radius:10px;margin:8px 0}
+.qr img{width:100%;height:100%;object-fit:contain}
+.form{display:grid;gap:10px;margin:12px 0}
+.acts{display:flex;flex-wrap:wrap;gap:10px}
+footer{text-align:center;color:var(--mut);padding:28px 16px;font-size:.9rem}
+.hide{display:none}
+@media(max-width:520px){.pay{grid-template-columns:1fr}.search{max-width:none;flex:1 1 100%}nav a{padding:8px}}
+</style></head><body>
+<header>
+<a class="logo" href="#accueil">🛍️ Ma Boutique</a>
+<nav><a href="#accueil" id="n-accueil">Accueil</a><a href="#panier" id="n-panier">Panier<span class="badge" id="cnt">0</span></a></nav>
+</header>
+<main>
+<section id="v-accueil">
+<div class="hero"><h1>Tout ce qu’il vous faut, livré chez vous.</h1>
+<p>Vêtements, sacs, accessoires et articles pour la maison. Choisissez, ajoutez au panier, puis validez votre commande directement avec nous.</p>
+<a class="btn" href="#catalogue" onclick="document.getElementById('catalogue').scrollIntoView()">Voir les articles</a>
+<div class="perks"><span>Paiement Wave</span><span>Orange Money</span><span>Commande par WhatsApp</span></div></div>
+<div id="catalogue"></div>
+<div class="tools"><div class="chips" id="chips"></div><input class="search" id="q" type="search" placeholder="Rechercher un article" aria-label="Rechercher"></div>
+<div class="grid" id="grid"></div>
+</section>
+<section id="v-panier" class="hide">
+<h2>Mon panier</h2><div id="cart"></div>
+</section>
+<section id="v-commande" class="hide">
+<h2>Valider ma commande</h2><div id="checkout"></div>
+</section>
+</main>
+<footer>© Ma Boutique · Dakar, Sénégal · Paiement à la validation avec le vendeur</footer>
+<div class="modal" id="modal" onclick="if(event.target===this)closeM()"><div class="box" id="box" role="dialog" aria-modal="true"></div></div>
+<script>
+/* ===== À PERSONNALISER ===== */
+const SHOP={nom:"Ma Boutique",whatsapp:"221770000000",tel:"+221770000000",wave:"77 000 00 00",om:"77 000 00 00",qrWave:"",qrOM:""};
+/* qrWave / qrOM : collez ici l’image de votre QR code (lien ou data:image). img : photo de chaque article. */
+const P=[
+{id:1,n:"T-shirt coton",p:5000,c:"Vêtements",e:"👕",bg:"#f6d8c4",d:"T-shirt 100 % coton, coupe droite, tailles S à XL. Doux et résistant au lavage."},
+{id:2,n:"Robe wax",p:15000,c:"Vêtements",e:"👗",bg:"#f2c0cf",d:"Robe en tissu wax, motifs colorés, coupe ajustée. Fabrication locale."},
+{id:3,n:"Boubou brodé",p:25000,c:"Vêtements",e:"🥻",bg:"#c9d8f0",d:"Boubou traditionnel brodé à la main, idéal pour les fêtes et cérémonies."},
+{id:4,n:"Chemise lin",p:9000,c:"Vêtements",e:"👔",bg:"#d5e6d0",d:"Chemise légère en lin, parfaite pour la chaleur. Plusieurs couleurs."},
+{id:5,n:"Jean slim",p:12000,c:"Pantalons",e:"👖",bg:"#bcd0ea",d:"Jean stretch coupe slim, confortable toute la journée. Tailles 36 à 46."},
+{id:6,n:"Pantalon chino",p:10000,c:"Pantalons",e:"🩳",bg:"#e8d9b8",d:"Pantalon chino en coton, coupe droite, élégant et décontracté."},
+{id:7,n:"Jogging sport",p:8000,c:"Pantalons",e:"🏃",bg:"#d9d4ee",d:"Jogging molletonné avec poches zippées, pour le sport et la maison."},
+{id:8,n:"Sac à main cuir",p:18000,c:"Sacs",e:"👜",bg:"#e8c5a6",d:"Sac à main en cuir véritable, deux compartiments et fermeture zippée."},
+{id:9,n:"Sac à dos",p:14000,c:"Sacs",e:"🎒",bg:"#c5e0e6",d:"Sac à dos résistant à l’eau avec poche pour ordinateur 15 pouces."},
+{id:10,n:"Pochette soirée",p:6000,c:"Sacs",e:"👛",bg:"#f1cfe0",d:"Petite pochette élégante avec chaînette amovible."},
+{id:11,n:"Montre classique",p:20000,c:"Accessoires",e:"⌚",bg:"#dcdcdc",d:"Montre analogique bracelet acier, résistante aux éclaboussures."},
+{id:12,n:"Lunettes de soleil",p:4500,c:"Accessoires",e:"🕶️",bg:"#f5e1a4",d:"Lunettes protection UV400, monture légère et solide."},
+{id:13,n:"Bracelet perles",p:3000,c:"Accessoires",e:"📿",bg:"#e9c7d2",d:"Bracelet artisanal en perles colorées, fait main."},
+{id:14,n:"Casquette",p:3500,c:"Accessoires",e:"🧢",bg:"#c8d9c0",d:"Casquette ajustable en coton, plusieurs coloris."},
+{id:15,n:"Parure de lit",p:22000,c:"Maison",e:"🛏️",bg:"#dfd2ec",d:"Parure 2 places : drap, housse et 2 taies. Tissu doux et respirant."},
+{id:16,n:"Set de cuisine",p:16000,c:"Maison",e:"🍳",bg:"#f3d3b5",d:"Set de 5 ustensiles de cuisine antiadhésifs, faciles à nettoyer."},
+{id:17,n:"Lampe déco",p:7500,c:"Maison",e:"💡",bg:"#f6e7a8",d:"Lampe de chevet décorative, lumière chaude basse consommation."},
+{id:18,n:"Tapis salon",p:28000,c:"Maison",e:"🧶",bg:"#d3c1b0",d:"Tapis doux 160×230 cm, antidérapant, entretien facile."},
+{id:19,n:"Sandales cuir",p:9500,c:"Chaussures",e:"🩴",bg:"#e5cfae",d:"Sandales en cuir, semelle confortable. Pointures 36 à 45."},
+{id:20,n:"Baskets",p:17000,c:"Chaussures",e:"👟",bg:"#cfe0ee",d:"Baskets légères et respirantes, idéales pour la marche et le sport."}
+];
+const CATS=["Tous",...new Set(P.map(x=>x.c))];
+let cat="Tous",term="",cart={};
+try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
+const $=id=>document.getElementById(id);
+const F=n=>n.toLocaleString("fr-FR")+" FCFA";
+const save=()=>{try{localStorage.setItem("cart",JSON.stringify(cart))}catch(e){}};
+const pic=x=>`<div class="ph" style="background:${x.bg}">${x.img?`<img src="${x.img}" alt="${x.n}">`:x.e}</div>`;
+function count(){return Object.values(cart).reduce((a,b)=>a+b,0)}
+function total(){return Object.entries(cart).reduce((s,[id,q])=>s+q*P.find(x=>x.id==id).p,0)}
+function chips(){$("chips").innerHTML=CATS.map(c=>`<button class="chip ${c===cat?"on":""}" onclick="setCat('${c}')">${c}</button>`).join("")}
+function setCat(c){cat=c;chips();grid()}
+function grid(){
+const l=P.filter(x=>(cat==="Tous"||x.c===cat)&&x.n.toLowerCase().includes(term));
+$("grid").innerHTML=l.length?l.map(x=>`<div class="card"><div onclick="openM(${x.id})" style="cursor:pointer">${pic(x)}<div class="price">${F(x.p)}</div><div class="name">${x.n}</div><div class="cat">${x.c}</div></div><button class="add" onclick="add(${x.id})">Ajouter au panier</button></div>`).join(""):`<div class="empty">Aucun article trouvé.</div>`}
+function add(id,n=1){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];save();upd();if(location.hash==="#panier")renderCart()}
+function upd(){$("cnt").textContent=count()}
+function openM(id){const x=P.find(y=>y.id===id);
+$("box").innerHTML=`${pic(x)}<div class="b"><div class="price" style="padding:0">${F(x.p)}</div><h2 style="margin:4px 0">${x.n}</h2><div class="cat" style="padding:0 0 8px">${x.c}</div><p>${x.d}</p><div class="acts"><button class="btn" onclick="add(${x.id});closeM()">Ajouter au panier</button><button class="btn o" onclick="closeM()">Fermer</button></div></div>`;
+$("modal").classList.add("on")}
+function closeM(){$("modal").classList.remove("on")}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
+$("q").oninput=e=>{term=e.target.value.toLowerCase();grid()};
+function renderCart(){
+const ids=Object.keys(cart);
+if(!ids.length){$("cart").innerHTML=`<div class="empty">Votre panier est vide.<br><br><a class="btn" href="#accueil">Choisir des articles</a></div>`;return}
+$("cart").innerHTML=ids.map(id=>{const x=P.find(y=>y.id==id);return `<div class="row">${pic(x)}<div class="info"><div class="name" style="padding:0">${x.n}</div><div class="price" style="padding:0">${F(x.p)}</div></div><div class="qty"><button onclick="add(${id},-1)" aria-label="Retirer un">−</button><b>${cart[id]}</b><button onclick="add(${id},1)" aria-label="Ajouter un">+</button></div></div>`}).join("")+`<div class="total">Total : ${F(total())}</div><div class="acts" style="justify-content:flex-end"><button class="btn o" onclick="cart={};save();upd();renderCart()">Vider</button><a class="btn" href="#commande">Valider ma commande</a></div>`}
+function msg(){const nm=$("nm")?.value||"",ad=$("ad")?.value||"";
+return `Bonjour, je souhaite commander sur ${SHOP.nom} :\n`+Object.entries(cart).map(([id,q])=>{const x=P.find(y=>y.id==id);return `• ${q} × ${x.n} (${F(x.p*q)})`}).join("\n")+`\n\nTotal : ${F(total())}\nNom : ${nm}\nAdresse : ${ad}\nPaiement : ${window.pm||"Wave"}`}
+function wa(){window.open("https://wa.me/"+SHOP.whatsapp+"?text="+encodeURIComponent(msg()),"_blank")}
+function qrBox(t,num,src){return `<div class="qr"><b>${t}</b><div class="q">${src?`<img src="${src}" alt="QR ${t}">`:"QR code à ajouter"}</div>Numéro : <b>${num}</b></div>`}
+function renderCheckout(){
+if(!count()){$("checkout").innerHTML=`<div class="empty">Ajoutez d’abord des articles.<br><br><a class="btn" href="#accueil">Voir la boutique</a></div>`;return}
+$("checkout").innerHTML=`<div class="total" style="text-align:left">${count()} article(s) · ${F(total())}</div>
+<div class="form"><input id="nm" placeholder="Votre nom" aria-label="Nom"><textarea id="ad" rows="2" placeholder="Adresse de livraison" aria-label="Adresse"></textarea></div>
+<h3>1. Choisissez le paiement</h3>
+<div class="pay">${qrBox("Wave",SHOP.wave,SHOP.qrWave)}${qrBox("Orange Money",SHOP.om,SHOP.qrOM)}</div>
+<p style="color:var(--mut)">Scannez le QR code ou envoyez le montant au numéro indiqué, puis confirmez avec le vendeur.</p>
+<h3>2. Contactez le vendeur</h3>
+<div class="acts"><button class="btn g" onclick="wa()">Commander sur WhatsApp</button><a class="btn" href="tel:${SHOP.tel}">Appeler le vendeur</a><a class="btn o" href="#panier">Retour au panier</a></div>`}
+function route(){
+const h=(location.hash||"#accueil").slice(1);const v=["accueil","panier","commande"].includes(h)?h:"accueil";
+["accueil","panier","commande"].forEach(k=>$("v-"+k).classList.toggle("hide",k!==v));
+$("n-accueil").classList.toggle("on",v==="accueil");$("n-panier").classList.toggle("on",v!=="accueil");
+if(v==="panier")renderCart();if(v==="commande")renderCheckout();window.scrollTo(0,0)}
+window.addEventListener("hashchange",route);
+chips();grid();upd();route();
+</script></body></html>
